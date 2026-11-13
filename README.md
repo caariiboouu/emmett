@@ -23,7 +23,7 @@ Put the file in `art/` and set `art: { img: "art/your-file.webp", focus: "50% 40
 
 | Card | Shape | Size |
 | --- | --- | --- |
-| Cards 1–6 (art window) | 3:2 landscape | 1200 × 800 |
+| Cards 1–6 (art window) | square or 4:3 | 800 × 800 or larger |
 | Card 7, Emmett (full card) | 63:88 portrait | 1260 × 1760 |
 | Link preview (`art/share.png`) | 1.91:1 | 1200 × 630 |
 
