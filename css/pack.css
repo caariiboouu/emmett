@@ -2,8 +2,6 @@
    --tear is 0..1 (how far the rip has gone). --dir is 1 (rip goes right) or -1 (rip goes left). */
 
 .pack {
-  --px: 0;
-  --py: 0;
   --tear: 0;
   --dir: 1;
   position: relative;
@@ -25,8 +23,32 @@
   position: absolute;
   inset: 0;
   container-type: inline-size;
-  transform: rotateX(calc(var(--py) * -8deg)) rotateY(calc(var(--px) * 10deg));
-  filter: drop-shadow(0 14px 22px rgb(1 14 32 / 0.5));
+  /* js/holo.js writes the tilt transform. */
+}
+
+.pack.is-live .pack-inner,
+.pack.is-live :is(.pack-sheen, .pack-band) {
+  will-change: transform;
+}
+
+/* The body and the strip carry the crinkle filter and animate away on the tear.
+   Their layers exist from the start, so the filter renders at load, not mid-animation. */
+.pack-body,
+.pack-strip {
+  will-change: transform, opacity;
+}
+
+/* The shadow under the pack: a static soft ellipse, not a filter on the moving pack. */
+.pack::before {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -5%;
+  height: 12%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.55), transparent);
+  pointer-events: none;
 }
 
 .pack.nudge .pack-inner {
@@ -81,14 +103,33 @@
   right: 0;
   /* Tall enough to cover body and strip; each piece shows its part. */
   height: calc(100cqi * 94 / 63);
-  /* Black chrome foil with a rainbow sheen that moves with the pointer. */
+  /* Black chrome foil. It never changes, so the crinkle filter runs once.
+     The moving rainbow and the light band are separate layers (.pack-sheen, .pack-band). */
   background:
-    radial-gradient(70% 40% at calc(30% + var(--px) * 30%) 20%, rgb(255 255 255 / 0.35), transparent 60%),
+    radial-gradient(70% 40% at 35% 20%, rgb(255 255 255 / 0.3), transparent 60%),
     repeating-linear-gradient(100deg, rgb(255 255 255 / 0.1) 0 2px, transparent 2px 9px),
-    linear-gradient(calc(150deg + var(--px) * 20deg), transparent 20%, rgb(34 228 255 / 0.45) 34%, rgb(198 255 26 / 0.35) 44%, rgb(255 90 31 / 0.4) 56%, rgb(255 45 135 / 0.35) 66%, transparent 80%),
     linear-gradient(170deg, #0d2340 0%, #050b14 45%, #0b1d36 70%, #050b14 100%);
-  background-blend-mode: soft-light, overlay, screen, normal;
+  background-blend-mode: soft-light, overlay, normal;
   filter: url("#crinkle");
+}
+
+/* Rainbow sheen over the foil. Its gradient is fixed; the layer moves by transform. */
+.pack-sheen {
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(150deg, transparent 22%, rgb(34 228 255 / 0.45) 34%, rgb(198 255 26 / 0.35) 44%, rgb(255 90 31 / 0.4) 56%, rgb(255 45 135 / 0.35) 66%, transparent 78%);
+  mix-blend-mode: screen;
+}
+
+/* A soft white band that slides across the bulge as the pack turns. */
+.pack-band {
+  position: absolute;
+  inset: 0 -40%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 38%, rgb(255 255 255 / 0.16) 50%, transparent 62%);
 }
 
 .pack-body .pack-foil {
@@ -97,25 +138,6 @@
 
 .pack-strip .pack-foil {
   top: 0;
-}
-
-.pack-foil::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  background: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / 0.35) 50%, transparent 60%);
-  mix-blend-mode: screen;
-  animation: sweep 3.8s ease-in-out infinite;
-}
-
-@keyframes sweep {
-  0%,
-  100% {
-    translate: -30% 0;
-  }
-  50% {
-    translate: 30% 0;
-  }
 }
 
 /* Heat-sealed crimp at the top and bottom edges. */
@@ -161,13 +183,6 @@
 
 .pack-body::after {
   background:
-    /* Light that slides across the bulge as the pack turns. */
-    linear-gradient(
-      90deg,
-      transparent calc(18% + var(--px) * 22%),
-      rgb(255 255 255 / 0.16) calc(30% + var(--px) * 22%),
-      transparent calc(44% + var(--px) * 22%)
-    ),
     /* The bulge: lighter in the middle, the sides fall away into shadow. */
     radial-gradient(75% 55% at 50% 48%, rgb(255 255 255 / 0.1), transparent 70%),
     linear-gradient(90deg, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0.25) 7%, transparent 16% 84%, rgb(0 0 0 / 0.25) 93%, rgb(0 0 0 / 0.7) 100%),
@@ -212,6 +227,9 @@
 .pack-print {
   position: absolute;
   z-index: 3;
+  /* One fixed GPU layer for the whole print. The SVG bevel filters inside it then render
+     once into this layer. Without it they overlap the moving sheen and re-run every frame. */
+  will-change: transform;
   inset: 6% 6% 12%;
   display: flex;
   flex-direction: column;
@@ -263,7 +281,7 @@
   line-height: 0.82;
   font-size: 70cqi;
   -webkit-text-stroke: 1.6cqi #000;
-  background: linear-gradient(calc(160deg + var(--px) * 40deg), #ff5a1f 15%, #ffc21a 38%, #fff 48%, #c6ff1a 56%, #22e4ff 78%);
+  background: linear-gradient(160deg, #ff5a1f 15%, #ffc21a 38%, #fff 48%, #c6ff1a 56%, #22e4ff 78%);
   background-size: 100% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -305,6 +323,11 @@
   top: 46%;
   width: 28cqi;
   rotate: 14deg;
+  /* Same rule as .pack-print: the layer is on the wrapper, the filter on the inner svg. */
+  will-change: transform;
+}
+
+.pack-sticker svg {
   filter: url("#diecut");
 }
 
@@ -380,7 +403,7 @@
 .tear-finger {
   position: absolute;
   top: 50%;
-  left: 8%;
+  left: 10%;
   width: 12cqi;
   height: 12cqi;
   margin: -6cqi 0 0 -6cqi;
@@ -392,26 +415,24 @@
   animation: swipe-hint 2.4s ease-in-out infinite;
 }
 
+/* Moves by transform (cqi = pack width), so the hint never triggers layout. */
 @keyframes swipe-hint {
   0% {
-    left: 10%;
+    transform: translateX(0) scale(0.6);
     opacity: 0;
-    scale: 0.6;
   }
   15% {
+    transform: translateX(4cqi) scale(1);
     opacity: 1;
-    scale: 1;
   }
   70% {
-    left: 88%;
+    transform: translateX(78cqi) scale(1);
     opacity: 1;
-    scale: 1;
   }
   85%,
   100% {
-    left: 90%;
+    transform: translateX(80cqi) scale(0.8);
     opacity: 0;
-    scale: 0.8;
   }
 }
 
@@ -450,11 +471,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pack-foil::after,
   .tear-finger {
     animation: none;
-  }
-  .tear-finger {
     left: 50%;
   }
   .pack-inner,

@@ -37,6 +37,11 @@ function buildDeck() {
 
 buildDeck()
 const slots = [...deckCards.querySelectorAll(".slot")]
+
+// Decode the card art while the pack is still sealed, so the reveal never waits on an image.
+const warmImages = () => deckCards.querySelectorAll("img").forEach((img) => img.decode?.().catch(() => {}))
+if ("requestIdleCallback" in window) requestIdleCallback(warmImages, { timeout: 1500 })
+else setTimeout(warmImages, 500)
 let index = 0
 
 // Keep the countdown true if the page stays open past midnight.
@@ -93,25 +98,7 @@ pack.addEventListener("pointercancel", endTear)
 // The sealed pack is the live surface: it sways slowly, or follows the mouse.
 setLive(pack)
 
-// The bevel light on the 7 and the title follows the same --px / --py.
-const packLights = [
-  [document.querySelector("#bevel .pack-light"), document.querySelector(".pack-seven")],
-  [document.querySelector("#bevel-sm .pack-light"), document.querySelector(".pack-title")],
-]
-
-function movePackLights() {
-  if (stage.dataset.phase === "sealed") {
-    const px = parseFloat(pack.style.getPropertyValue("--px")) || 0
-    const py = parseFloat(pack.style.getPropertyValue("--py")) || 0
-    for (const [light, el] of packLights) {
-      if (!light || !el) continue
-      light.setAttribute("x", (el.offsetWidth * (0.5 + px * 0.9)).toFixed(0))
-      light.setAttribute("y", (el.offsetHeight * (-0.35 + py * 0.6)).toFixed(0))
-    }
-  }
-  requestAnimationFrame(movePackLights)
-}
-requestAnimationFrame(movePackLights)
+// The bevel light on the 7 and the title is fixed: a moving light would re-run the SVG filter every frame.
 
 async function nudge() {
   statusEl.textContent = "Put your finger on the pack and swipe across the top."
@@ -165,6 +152,13 @@ function layout() {
   slots.forEach((slot, i) => {
     const depth = i - index
     slot.classList.toggle("is-top", depth === 0)
+    // The next card gets its GPU layers in an idle moment, not in the frame of the swipe.
+    if (depth !== 1) slot.classList.remove("is-next")
+    else if (!slot.classList.contains("is-next")) {
+      const promote = () => slots[index + 1] === slot && slot.classList.add("is-next")
+      if ("requestIdleCallback" in window) requestIdleCallback(promote, { timeout: 400 })
+      else setTimeout(promote, 200)
+    }
     slot.classList.toggle("is-gone", depth < 0)
     slot.classList.toggle("is-deep", depth > 3)
     slot.style.setProperty("--depth", Math.max(depth, 0))
@@ -176,9 +170,23 @@ function layout() {
   prevButton.disabled = index === 0
 }
 
+// Lay the binder out ahead of time, invisible, in an idle moment while a guest reads a card.
+// Then the final screen opens without computing ~450 element styles in one frame.
+let binderStaged = false
+function stageBinder() {
+  if (binderStaged || stage.dataset.phase !== "deck") return
+  binderStaged = true
+  binder.classList.add("is-staged")
+  binder.hidden = false
+}
+
 function showCard(i) {
   index = i
   layout()
+  if (!binderStaged) {
+    if ("requestIdleCallback" in window) requestIdleCallback(stageBinder, { timeout: 2000 })
+    else setTimeout(stageBinder, 800)
+  }
   const top = slots[index]
   if (top) setLive(top.querySelector(".card"))
   if (cards[index]?.rarity === "secret") revealSecret(top)
@@ -276,10 +284,12 @@ deckCards.addEventListener("pointercancel", endDrag)
 async function openBinder() {
   stage.dataset.phase = "binder"
   binder.hidden = false
+  binder.classList.remove("is-staged")
   statusEl.textContent = "You collected all 7 cards."
   setLive(null)
   window.scrollTo({ top: 0 })
-  burst(60)
+  // Confetti one frame later, so it does not land in the same frame as the binder layout.
+  requestAnimationFrame(() => burst(44))
 }
 
 binderGrid.addEventListener("click", (event) => {
@@ -328,6 +338,8 @@ lightboxCard.style.touchAction = "none"
 
 $("#againButton").addEventListener("click", () => {
   binder.hidden = true
+  binder.classList.remove("is-staged")
+  binderStaged = false
   setTear(0, 1)
   index = 0
   layout()
@@ -339,20 +351,83 @@ $("#againButton").addEventListener("click", () => {
 
 // ---------- Confetti ----------
 
+// Confetti on one canvas: one GPU layer and a few rectangles per frame,
+// instead of dozens of animated elements added to the page.
+const confetti = { canvas: null, ctx: null, bits: [], running: false, dpr: 1 }
+
 function burst(count) {
   if (reduceMotion) return
-  const box = $("#confetti")
+  if (!confetti.canvas) {
+    confetti.canvas = document.createElement("canvas")
+    confetti.canvas.className = "confetti-canvas"
+    confetti.canvas.setAttribute("aria-hidden", "true")
+    document.body.append(confetti.canvas)
+    confetti.ctx = confetti.canvas.getContext("2d")
+  }
+  const c = confetti.canvas
+  confetti.dpr = Math.min(2, window.devicePixelRatio || 1)
+  const w = innerWidth
+  const h = innerHeight
+  if (c.width !== Math.round(w * confetti.dpr) || c.height !== Math.round(h * confetti.dpr)) {
+    c.width = Math.round(w * confetti.dpr)
+    c.height = Math.round(h * confetti.dpr)
+  }
   const colors = ["#c6ff1a", "#22e4ff", "#ff5a1f", "#ffc21a", "#ff2d87", "#ffffff"]
   for (let i = 0; i < count; i++) {
-    const bit = document.createElement("i")
-    bit.style.setProperty("--x", `${(Math.random() * 2 - 1) * 46}vw`)
-    bit.style.setProperty("--y", `${-30 - Math.random() * 45}vh`)
-    bit.style.setProperty("--r", `${Math.random() * 720 - 360}deg`)
-    bit.style.setProperty("--d", `${900 + Math.random() * 900}ms`)
-    bit.style.background = colors[i % colors.length]
-    if (i % 3 === 0) bit.style.borderRadius = "50%"
-    box.append(bit)
-    setTimeout(() => bit.remove(), 2000)
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.6
+    const speed = 0.9 + Math.random() * 0.9 // px per ms
+    confetti.bits.push({
+      x: w / 2,
+      y: h * 0.58,
+      vx: Math.cos(angle) * speed * 0.9,
+      vy: Math.sin(angle) * speed,
+      r: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.02,
+      w: 7 + Math.random() * 4,
+      h: 10 + Math.random() * 6,
+      round: i % 3 === 0,
+      color: colors[i % colors.length],
+      life: 1300 + Math.random() * 700,
+      age: 0,
+    })
+  }
+  if (!confetti.running) {
+    confetti.running = true
+    let last = performance.now()
+    const step = (now) => {
+      const dt = Math.min(40, now - last)
+      last = now
+      const { ctx, dpr } = confetti
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, c.width, c.height)
+      confetti.bits = confetti.bits.filter((b) => (b.age += dt) < b.life)
+      for (const b of confetti.bits) {
+        b.vy += 0.0016 * dt // gravity
+        b.vx *= 0.995
+        b.x += b.vx * dt
+        b.y += b.vy * dt
+        b.r += b.vr * dt
+        ctx.globalAlpha = Math.min(1, 2.5 * (1 - b.age / b.life))
+        ctx.fillStyle = b.color
+        ctx.save()
+        ctx.translate(b.x, b.y)
+        ctx.rotate(b.r)
+        if (b.round) {
+          ctx.beginPath()
+          ctx.arc(0, 0, b.w / 2, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.abs(Math.cos(b.r * 2)) + 2)
+        }
+        ctx.restore()
+      }
+      if (confetti.bits.length) requestAnimationFrame(step)
+      else {
+        ctx.clearRect(0, 0, c.width, c.height)
+        confetti.running = false
+      }
+    }
+    requestAnimationFrame(step)
   }
 }
 

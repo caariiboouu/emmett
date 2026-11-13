@@ -127,7 +127,9 @@ export function cardMarkup(card, index) {
   return `
   <article class="card" data-type="${card.type}" data-rarity="${card.rarity}" data-id="${card.id}" aria-label="Card ${index + 1} of ${cards.length}: ${esc(card.name)}">
     <div class="card-frame">
+      <div class="card-sheen" aria-hidden="true"></div>
       <div class="card-face">
+        ${card.rarity === "reverse" ? `<div class="card-rev" aria-hidden="true"></div>` : ""}
         <div class="card-art${card.art.full ? " is-full" : ""}${card.art.img ? " has-img" : ""}">${card.art.img ? artMarkup(card) + fx : fx + artMarkup(card)}</div>
         <header class="card-head">
           <h2 class="card-name">${esc(card.name)}</h2>
@@ -148,6 +150,7 @@ export function cardMarkup(card, index) {
       </div>
       <div class="card-glare" aria-hidden="true"></div>
     </div>
+    <div class="card-rim" aria-hidden="true"></div>
   </article>`
 }
 

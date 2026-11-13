@@ -46,6 +46,17 @@ Then open http://localhost:8417/. The page uses JavaScript modules, so opening `
 
 The page has `noindex`, so search engines do not list it. Anyone with the link can still open it. The `research/` folder also publishes, at `/emmett/research/demos/`.
 
+## Performance rules
+
+The page must not drop frames on a phone. Keep these rules when you change it:
+
+- Anything that moves per frame moves by `transform` or `opacity` only, on a layer with `will-change: transform`. Do not tie gradients, `background-position`, masks or filters to the pointer.
+- SVG filters (`#crinkle`, `#bevel`, `#diecut`) sit on content that does not change, inside a layer that has `will-change`, so they render once.
+- No `backdrop-filter` and no CSS `filter: blur()` on anything that moves or sits over something that moves.
+- New layers are prepared ahead of time: the hidden deck draws at opacity 0.01, the next card gets its layers in an idle moment, and the binder lays out invisibly while a guest reads a card.
+
+Check with Chrome DevTools at 4x CPU slowdown: no frame should go past 25 ms.
+
 ## How it works
 
 | File | Job |
@@ -53,7 +64,7 @@ The page has `noindex`, so search engines do not list it. Anyone with the link c
 | `js/party.js` | Party facts and the seven cards |
 | `js/art.js` | Drawn placeholder creatures and icons |
 | `js/render.js` | Card markup, map and calendar links, countdown |
-| `js/holo.js` | One loop that moves the foil: finger or mouse first, then phone tilt, then a slow drift |
+| `js/holo.js` | Foil motion. Idle sway runs as Web Animations on the GPU thread; a finger, the mouse or phone tilt switches to a small loop. Both write only `transform` |
 | `js/main.js` | Tear, card stack, binder, close-up view, confetti |
 | `css/card.css` | Card frame and foil layers (from `research/demos/foil.css`) |
 | `css/pack.css` | Foil pack, zigzag seals, rip line |
