@@ -4,8 +4,9 @@
 const ink = "#0b2340"
 const line = `stroke="${ink}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"`
 
-const water = (fill = "#6fe7f0", y = 160) =>
-  `<path d="M-10 ${y} q25 -14 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 V210 H-10z" fill="${fill}" opacity=".85" />`
+// A wave line at height y, filled down to the bottom of the art (210 for a 3:2 window, 430 for the full card).
+const water = (fill = "#6fe7f0", y = 160, bottom = 210) =>
+  `<path d="M-10 ${y} q25 -14 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 V${bottom} H-10z" fill="${fill}" opacity=".85" />`
 
 const bubbles = (pts) =>
   pts.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#fff" stroke-width="2.5" opacity=".8" />`).join("")
@@ -80,20 +81,33 @@ export const art = {
       <path d="M245 128 h4" ${line} stroke-width="4" />
     </g>`,
 
-  cake: `
-    ${bubbles([[44, 54, 7], [60, 90, 4], [258, 60, 8]])}
-    <path d="M150 34 q-8 -10 0 -20 q8 10 0 20z" fill="#ffb02e" ${line} stroke-width="3" />
-    <rect x="144" y="36" width="12" height="30" rx="3" fill="#6fe7f0" ${line} stroke-width="4" />
-    <rect x="96" y="64" width="108" height="44" rx="10" fill="#ffd1e6" ${line} />
-    <path d="M96 78 q9 12 18 0 t18 0 t18 0 t18 0 t18 0 t18 0" fill="none" stroke="#ff4f9a" stroke-width="6" stroke-linecap="round" />
-    <rect x="76" y="104" width="148" height="54" rx="12" fill="#ff8fc2" ${line} />
-    <path d="M76 122 q12 14 24 0 t24 0 t24 0 t24 0 t24 0 t24 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" />
-    ${[[110, 94, "#ffd23f"], [176, 90, "#6fe7f0"], [96, 140, "#ffd23f"], [196, 142, "#6fe7f0"], [150, 146, "#7ce85a"]]
-      .map(([x, y, c], i) => `<rect x="${x}" y="${y}" width="10" height="4" rx="2" fill="${c}" transform="rotate(${i * 37} ${x + 5} ${y + 2})" />`)
+  // A cupcake fish with two small cupcake friends.
+  cupcake: `
+    ${bubbles([[40, 40, 7], [58, 74, 4], [262, 44, 8]])}
+    ${[
+      [62, 132, 0.55, "#ffd1e6", "#7ce85a"],
+      [238, 132, 0.55, "#c9f7ff", "#ffd23f"],
+    ]
+      .map(
+        ([x, y, k, top, wrap]) => `<g transform="translate(${x} ${y}) scale(${k})">
+          <path d="M-40 0 L-30 50 H30 L40 0 Z" fill="${wrap}" ${line} stroke-width="7" />
+          <path d="M-46 2 C-50 -26 -20 -40 0 -40 C20 -40 50 -26 46 2 Z" fill="${top}" ${line} stroke-width="7" />
+          <circle cx="0" cy="-46" r="9" fill="#ff4f9a" ${line} stroke-width="6" />
+        </g>`,
+      )
       .join("")}
-    <path d="M224 128 l26 -18 v40 z" fill="#ff8fc2" ${line} />
-    ${eye(124, 126, 6)}${eye(150, 126, 6)}
-    ${water("#6fe7f0", 172)}`,
+    <path d="M150 28 q-8 -10 0 -20 q8 10 0 20z" fill="#ffb02e" ${line} stroke-width="3" />
+    <rect x="145" y="30" width="10" height="24" rx="3" fill="#6fe7f0" ${line} stroke-width="4" />
+    <path d="M100 112 L112 168 H188 L200 112 Z" fill="#ff8fc2" ${line} />
+    <path d="M124 116 L128 166 M150 116 V166 M176 116 L172 166" stroke="${ink}" stroke-width="3" opacity=".35" />
+    <path d="M92 114 C84 84 114 58 150 58 C186 58 216 84 208 114 Q194 104 179 114 Q164 104 150 114 Q136 104 121 114 Q106 104 92 114 Z" fill="#fff4fa" ${line} />
+    ${[[118, 84, "#ffd23f"], [136, 72, "#6fe7f0"], [166, 74, "#7ce85a"], [184, 90, "#ff4f9a"], [150, 92, "#a77bff"], [128, 100, "#ff4f9a"], [172, 102, "#ffd23f"]]
+      .map(([x, y, c], i) => `<rect x="${x}" y="${y}" width="10" height="4" rx="2" fill="${c}" transform="rotate(${i * 41} ${x + 5} ${y + 2})" />`)
+      .join("")}
+    <path d="M198 136 l26 -16 v36 z" fill="#ff8fc2" ${line} />
+    ${eye(136, 136, 6)}${eye(164, 136, 6)}
+    <path d="M142 152 q8 7 16 0" fill="none" ${line} stroke-width="3.5" />
+    ${water("#6fe7f0", 176)}`,
 
   pelican: `
     ${bubbles([[264, 44, 7], [40, 150, 6]])}
@@ -129,9 +143,8 @@ export const art = {
     <circle cx="150" cy="150" r="44" fill="none" stroke="#fff" stroke-width="5" opacity=".7" />
     <text x="150" y="176" text-anchor="middle" font-family="Lilita One, sans-serif" font-size="78" fill="${ink}">7</text>
     ${bubbles([[60, 110, 10], [82, 70, 6], [236, 90, 12], [250, 140, 6], [44, 190, 5]])}
-    ${water("#1fa5d6", 300)}
-    ${water("#0b5fa5", 330)}
-    <rect y="340" width="300" height="80" fill="#0b5fa5" />`,
+    ${water("#1fa5d6", 300, 430)}
+    ${water("#0b5fa5", 330, 430)}`,
 }
 
 // Small line icons for the move rows and the type badge.

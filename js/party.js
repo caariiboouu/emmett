@@ -101,12 +101,11 @@ export const cards = [
     typeLabel: "Treat card",
     stat: 99,
     rarity: "reverse",
-    art: { svg: "cake" },
-    // Editable guess: change this if the plan is different.
-    big: "Cake after the swim",
-    lines: ["We dry off, sing, and eat birthday cake."],
+    art: { svg: "cupcake" },
+    big: "Cupcakes after the swim",
+    lines: ["We dry off, sing, and eat birthday cupcakes."],
     moves: [{ icon: "star", name: "Make a wish", value: "×7" }],
-    flavor: "Swims fastest when someone says the word cake.",
+    flavor: "Swims fastest when someone says the word cupcake.",
   },
   {
     id: "rsvp",

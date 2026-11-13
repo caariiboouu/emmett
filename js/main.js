@@ -208,6 +208,7 @@ prevButton.addEventListener("click", prev)
 document.addEventListener("keydown", (event) => {
   if (!lightbox.hidden && event.key === "Escape") return closeLightbox()
   if (stage.dataset.phase !== "deck") return
+  if (event.key === "ArrowRight" || event.key === "ArrowLeft") event.preventDefault()
   if (event.key === "ArrowRight") next(-1)
   if (event.key === "ArrowLeft") prev()
 })

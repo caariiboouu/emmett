@@ -34,6 +34,9 @@ body {
 }
 
 body {
+  /* Cards that fly off the side must not make the page scroll sideways. */
+  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--deep);
   color: var(--foam);
   font-family: var(--body);
@@ -137,6 +140,8 @@ button {
   align-items: center;
   padding: max(14px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
   perspective: 1200px;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .status {

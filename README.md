@@ -10,12 +10,14 @@ All card text is in [js/party.js](js/party.js). Change it there and the pack, th
 
 Open items:
 
-- `party.rsvp`: name, phone, deadline and the message text. While a field is empty, the RSVP card says "RSVP details coming soon" and shows no button.
-- The `gear` and `cake` cards are guesses. Change them to match the pool's party plan.
+- `party.rsvp`: Alena by text or email. There is no reply-by date (`by` is empty), so the card shows none.
+- The `gear` card is a guess. Change it to match the pool's party plan.
 - Emmett's two moves on the last card.
 - If the party facts change, also change [emmett-birthday.ics](emmett-birthday.ics). It needs CRLF line endings and UTC times (2 PM Central in December = 20:00 UTC).
 
 ## Add your own images
+
+Prompts for Gemini, one per card, are in [art/PROMPTS.md](art/PROMPTS.md).
 
 Put the file in `art/` and set `art: { img: "art/your-file.webp" }` on the card in `js/party.js`. The image covers the art window (`object-fit: cover`), so keep the subject near the center.
 
