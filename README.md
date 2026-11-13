@@ -10,7 +10,7 @@ All card text is in [js/party.js](js/party.js). Change it there and the pack, th
 
 Open items:
 
-- `party.rsvp`: Alena by text or email. There is no reply-by date (`by` is empty), so the card shows none.
+- `party.rsvp`: Alenna by text or email. There is no reply-by date (`by` is empty), so the card shows none.
 - The `gear` card is a guess. Change it to match the pool's party plan.
 - Emmett's two moves on the last card.
 - If the party facts change, also change [emmett-birthday.ics](emmett-birthday.ics). It needs CRLF line endings and UTC times (2 PM Central in December = 20:00 UTC).

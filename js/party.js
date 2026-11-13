@@ -18,9 +18,9 @@ export const party = {
   phoneLabel: "539.233.6295",
   phoneHref: "tel:+15392336295",
 
-  // RSVP goes to Alena by text or email. "by" is the reply-by date: leave it "" for no date.
+  // RSVP goes to Alenna by text or email. "by" is the reply-by date: leave it "" for no date.
   rsvp: {
-    name: "Alena",
+    name: "Alenna",
     phone: "+14158906365",
     phoneLabel: "415.890.6365",
     email: "alenachubenko@gmail.com",
@@ -119,8 +119,8 @@ export const cards = [
     big: "{rsvpBig}",
     lines: ["{rsvpLine}"],
     moves: [
-      { icon: "phone", name: "Text Alena", href: "{rsvpSms}", value: "{rsvpPhone}" },
-      { icon: "mail", name: "Email Alena", href: "{rsvpMail}", value: "Email" },
+      { icon: "phone", name: "Text Alenna", href: "{rsvpSms}", value: "{rsvpPhone}" },
+      { icon: "mail", name: "Email Alenna", href: "{rsvpMail}", value: "Email" },
     ],
     flavor: "Carries every reply in its beak. Drops none.",
   },
