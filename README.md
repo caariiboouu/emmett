@@ -19,7 +19,7 @@ Open items:
 
 Prompts for Gemini, one per card, are in [art/PROMPTS.md](art/PROMPTS.md).
 
-Put the file in `art/` and set `art: { img: "art/your-file.webp" }` on the card in `js/party.js`. The image covers the art window (`object-fit: cover`), so keep the subject near the center.
+Put the file in `art/` and set `art: { img: "art/your-file.webp", focus: "50% 40%" }` on the card in `js/party.js`. The art window takes the height the words leave free, so the image is cropped differently on each card. `focus` is the point that stays in view. Square images work well.
 
 | Card | Shape | Size |
 | --- | --- | --- |

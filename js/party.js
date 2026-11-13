@@ -31,6 +31,7 @@ export const party = {
 
 // Card art: each card can use a drawn creature (key in art.js) or an image file.
 // To use an image, set img: "art/emmett.webp". See README.md for the sizes.
+// focus: the point of the image that must stay in view when the art window crops it ("x% y%").
 //
 // Order is the order in the pack. The last card is the secret rare.
 export const cards = [
@@ -41,7 +42,7 @@ export const cards = [
     typeLabel: "Invite card",
     stat: 70,
     rarity: "holo",
-    art: { svg: "float7" },
+    art: { img: "art/splash-bash.webp", focus: "50% 38%" },
     big: "Emmett is turning 7!",
     lines: ["You are invited to his birthday swim party."],
     moves: [{ icon: "wave", name: "Big splash", value: "Pool party" }],
@@ -55,7 +56,7 @@ export const cards = [
     stat: 120,
     statNote: "120 minutes of fun",
     rarity: "holo",
-    art: { svg: "turtle" },
+    art: { img: "art/clockshell.webp", focus: "50% 42%" },
     big: "Saturday, December 5",
     lines: ["2:00 – 4:00 PM"],
     moves: [
@@ -71,7 +72,7 @@ export const cards = [
     typeLabel: "Tulsa Hills",
     stat: 30,
     rarity: "holo",
-    art: { svg: "crab" },
+    art: { img: "art/pinchpin.webp", focus: "50% 22%" },
     big: "Goldfish Swim School",
     lines: ["7514 South Olympia Avenue", "Tulsa, OK 74132"],
     moves: [
@@ -87,7 +88,7 @@ export const cards = [
     typeLabel: "Gear card",
     stat: 40,
     rarity: "reverse",
-    art: { svg: "octopus" },
+    art: { img: "art/packtopus.webp", focus: "50% 40%" },
     // Editable guess: change the list to what the pool asks for.
     big: "Pack your splash kit",
     list: ["Swimsuit", "Towel", "Goggles, if you like them", "Dry clothes for after"],
@@ -101,7 +102,7 @@ export const cards = [
     typeLabel: "Treat card",
     stat: 99,
     rarity: "reverse",
-    art: { svg: "cupcake" },
+    art: { img: "art/frostfin.webp", focus: "50% 30%" },
     big: "Cupcakes after the swim",
     lines: ["We dry off, sing, and eat birthday cupcakes."],
     moves: [{ icon: "star", name: "Make a wish", value: "×7" }],
@@ -114,7 +115,7 @@ export const cards = [
     typeLabel: "Reply card",
     stat: 50,
     rarity: "holo",
-    art: { svg: "pelican" },
+    art: { img: "art/postal-pelican.webp", focus: "50% 36%" },
     big: "{rsvpBig}",
     lines: ["{rsvpLine}"],
     moves: [
@@ -131,7 +132,7 @@ export const cards = [
     stat: 777,
     level: 7,
     rarity: "secret",
-    art: { svg: "splashking", full: true },
+    art: { img: "art/emmett.webp", full: true },
     big: "",
     lines: [],
     // TODO(Joel): give Emmett's card his real best moves.

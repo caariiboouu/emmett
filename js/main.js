@@ -329,7 +329,7 @@ $("#againButton").addEventListener("click", () => {
 function burst(count) {
   if (reduceMotion) return
   const box = $("#confetti")
-  const colors = ["#ff4f9a", "#ffd23f", "#6fe7f0", "#7ce85a", "#a77bff", "#ffffff"]
+  const colors = ["#c6ff1a", "#22e4ff", "#ff5a1f", "#ffc21a", "#ff2d87", "#ffffff"]
   for (let i = 0; i < count; i++) {
     const bit = document.createElement("i")
     bit.style.setProperty("--x", `${(Math.random() * 2 - 1) * 46}vw`)

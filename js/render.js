@@ -88,7 +88,8 @@ const icon = (name) =>
 
 function artMarkup(card) {
   if (card.art.img) {
-    return `<img src="${esc(card.art.img)}" alt="" loading="lazy" decoding="async" />`
+    const focus = card.art.focus ? ` style="object-position: ${esc(card.art.focus)}"` : ""
+    return `<img src="${esc(card.art.img)}" alt="" decoding="async"${focus} />`
   }
   const viewBox = card.art.full ? "0 0 300 420" : "0 0 300 200"
   return `<svg viewBox="${viewBox}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${art[card.art.svg] || ""}</svg>`
@@ -141,7 +142,7 @@ export function cardMarkup(card, index) {
         </div>
         <footer class="card-foot">
           <span class="rarity" title="${rarityName}">${stars}</span>
-          <span class="set">Emmett's Splash Series</span>
+          <span class="set">Splash Legends</span>
           <span class="number">${no}</span>
         </footer>
       </div>

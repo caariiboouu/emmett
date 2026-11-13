@@ -1,19 +1,20 @@
-/* Pool party world: deep-end blue, tile grid, light on the water.
-   Pool-noodle colors are the only accents. */
+/* Night-swim arena: deep-end navy, neon tile grid, light on the water.
+   Accents: volt green, electric cyan, lava orange. */
 
 :root {
   color-scheme: dark;
-  --deep: #04264a;
-  --tile: #0b5fa5;
-  --chlorine: #6fe7f0;
-  --noodle-pink: #ff4f9a;
-  --noodle-yellow: #ffd23f;
-  --noodle-lime: #7ce85a;
-  --ink: #0b2340;
-  --foam: #ffffff;
+  --deep: #040b16;
+  --navy: #071a33;
+  --tile: #0e3a66;
+  --cyan: #22e4ff;
+  --volt: #c6ff1a;
+  --lava: #ff5a1f;
+  --gold: #ffc21a;
+  --ink: #050b14;
+  --foam: #eaf6ff;
 
-  --display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
-  --body: "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --display: "Bungee", "Arial Black", system-ui, sans-serif;
+  --body: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
 
   /* One card size for the whole page. It fits a phone with room for the controls. */
   --card-w: min(84vw, 340px, calc((100svh - 190px) * 0.716));
@@ -64,7 +65,7 @@ button {
 }
 
 :focus-visible {
-  outline: 3px solid var(--noodle-yellow);
+  outline: 3px solid var(--volt);
   outline-offset: 3px;
 }
 
@@ -76,8 +77,9 @@ button {
   z-index: -1;
   overflow: hidden;
   background:
-    radial-gradient(120% 70% at 50% -10%, #1785c9 0%, transparent 60%),
-    linear-gradient(180deg, #0d6db5 0%, var(--deep) 75%);
+    radial-gradient(120% 60% at 50% -10%, #0f5a9e 0%, transparent 60%),
+    radial-gradient(60% 40% at 50% 110%, rgb(34 228 255 / 0.18), transparent 70%),
+    linear-gradient(180deg, #08284d 0%, var(--deep) 70%);
 }
 
 /* Tiles, seen through the water at a slight angle. */
@@ -85,8 +87,8 @@ button {
   position: absolute;
   inset: -20% -40% -10%;
   background-image:
-    linear-gradient(rgb(255 255 255 / 0.13) 2px, transparent 2px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.13) 2px, transparent 2px);
+    linear-gradient(rgb(34 228 255 / 0.2) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(34 228 255 / 0.2) 2px, transparent 2px);
   background-size: 44px 44px;
   transform: perspective(700px) rotateX(48deg);
   transform-origin: 50% 0;
@@ -98,10 +100,10 @@ button {
   position: absolute;
   inset: -30%;
   background:
-    radial-gradient(18% 9% at 30% 30%, rgb(160 245 255 / 0.22), transparent 70%),
-    radial-gradient(14% 8% at 70% 22%, rgb(160 245 255 / 0.18), transparent 70%),
-    radial-gradient(22% 10% at 55% 60%, rgb(160 245 255 / 0.14), transparent 70%),
-    radial-gradient(16% 7% at 20% 75%, rgb(160 245 255 / 0.14), transparent 70%);
+    radial-gradient(18% 9% at 30% 30%, rgb(34 228 255 / 0.18), transparent 70%),
+    radial-gradient(14% 8% at 70% 22%, rgb(34 228 255 / 0.14), transparent 70%),
+    radial-gradient(22% 10% at 55% 60%, rgb(198 255 26 / 0.07), transparent 70%),
+    radial-gradient(16% 7% at 20% 75%, rgb(198 255 26 / 0.07), transparent 70%);
   filter: blur(6px);
   animation: drift 14s ease-in-out infinite alternate;
 }
@@ -152,7 +154,8 @@ button {
   text-align: center;
   font-weight: 600;
   font-size: 1rem;
-  color: #d6f6ff;
+  letter-spacing: 0.02em;
+  color: #9fe9ff;
   text-wrap: balance;
 }
 
@@ -169,8 +172,8 @@ button {
 }
 
 .open-button {
-  border: 2px solid rgb(255 255 255 / 0.4);
-  background: transparent;
+  border: 2px solid rgb(34 228 255 / 0.6);
+  background: rgb(4 11 22 / 0.5);
   border-radius: 999px;
   padding: 0.35rem 1.1rem;
   font-weight: 700;
@@ -197,8 +200,10 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid rgb(255 255 255 / 0.45);
-  background: rgb(4 38 74 / 0.5);
+  border: 2px solid var(--cyan);
+  background: rgb(4 11 22 / 0.6);
+  color: var(--cyan);
+  box-shadow: 0 0 14px rgb(34 228 255 / 0.35);
   cursor: pointer;
 }
 
@@ -222,8 +227,8 @@ button {
   min-width: 4.5em;
   text-align: center;
   font-family: var(--display);
-  font-size: 1.2rem;
-  letter-spacing: 0.02em;
+  font-size: 1.05rem;
+  color: var(--volt);
 }
 
 .tilt-button {
@@ -232,9 +237,9 @@ button {
   padding: 0.35rem 0.8rem;
   white-space: nowrap;
   font-size: 0.9rem;
-  background: var(--noodle-yellow);
+  background: var(--volt);
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -290,17 +295,18 @@ button {
   text-align: center;
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  font-size: clamp(1.9rem, 8vw, 3.4rem);
   line-height: 1;
-  color: var(--noodle-yellow);
-  text-shadow: 0 4px 0 var(--ink);
-  letter-spacing: 0.01em;
+  color: var(--volt);
+  text-shadow:
+    0 4px 0 #000,
+    0 0 24px rgb(198 255 26 / 0.45);
 }
 
 .binder-lead {
   margin: 0.4rem 0 1.4rem;
   text-align: center;
-  color: #d6f6ff;
+  color: #9fe9ff;
   font-weight: 600;
 }
 
@@ -310,8 +316,10 @@ button {
   gap: 14px;
   padding: 14px;
   border-radius: 22px;
-  background: rgb(2 22 46 / 0.45);
-  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.08);
+  background: rgb(2 8 18 / 0.6);
+  box-shadow:
+    inset 0 0 0 2px rgb(34 228 255 / 0.18),
+    0 0 40px rgb(34 228 255 / 0.08);
 }
 
 .binder-slot {
@@ -347,16 +355,18 @@ button {
   max-width: 34rem;
   padding: 1.4rem 1.4rem 0.6rem;
   border-radius: 22px;
-  background: var(--foam);
-  color: var(--ink);
+  background: #0b1a2e;
+  color: var(--foam);
+  box-shadow: inset 0 0 0 2px rgb(34 228 255 / 0.25);
 }
 
 .facts-title {
   margin: 0 0 0.8rem;
   font-family: var(--display);
   font-weight: 400;
-  font-size: 1.5rem;
-  line-height: 1.1;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  color: var(--volt);
 }
 
 .facts dl {
@@ -368,13 +378,13 @@ button {
   grid-template-columns: 4.5rem 1fr;
   gap: 0.6rem;
   padding: 0.75rem 0;
-  border-top: 2px dashed #cfe9f3;
+  border-top: 1px solid rgb(34 228 255 / 0.2);
 }
 
 .facts dt {
   font-family: var(--display);
-  font-size: 1.1rem;
-  color: var(--tile);
+  font-size: 0.95rem;
+  color: var(--cyan);
 }
 
 .facts dd {
@@ -390,7 +400,7 @@ button {
 }
 
 .facts a {
-  color: #0a4f8f;
+  color: #8ff4ff;
   font-weight: 800;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
@@ -399,7 +409,8 @@ button {
 .again-button {
   display: block;
   margin: 1.6rem auto 1rem;
-  border: 2px solid rgb(255 255 255 / 0.5);
+  border: 2px solid var(--volt);
+  color: var(--volt);
   background: transparent;
   border-radius: 999px;
   padding: 0.55rem 1.3rem;
@@ -418,7 +429,7 @@ button {
   align-content: center;
   gap: 1rem;
   padding: 16px;
-  background: rgb(2 18 38 / 0.82);
+  background: rgb(2 6 14 / 0.86);
   backdrop-filter: blur(6px);
   perspective: 1200px;
   animation: fade 0.25s ease;
