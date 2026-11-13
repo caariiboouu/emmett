@@ -7,6 +7,10 @@ const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || isApple
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
+// iPhone Safari opens a linked .ics file in its "Add to Calendar" sheet.
+// With a download attribute it saves the file to Downloads instead, so iOS gets a plain link.
+const icsDownloadAttr = isIOS ? "" : ` download="emmett-birthday.ics"`
+
 export function mapsHref() {
   const q = encodeURIComponent(`${party.venue} ${party.venueArea}`)
   const addr = encodeURIComponent(`${party.street}, ${party.city}`)
@@ -81,7 +85,7 @@ function moveMarkup(move, cardId) {
   const inner = `${icon(move.icon)}<span class="move-name">${esc(move.name)}${text}</span>${value}`
   if (href) {
     const ext = /^https?:/.test(href) ? ` target="_blank" rel="noopener"` : ""
-    const dl = href.endsWith(".ics") ? ` download="emmett-birthday.ics"` : ""
+    const dl = href.endsWith(".ics") ? icsDownloadAttr : ""
     return `<li><a class="move move-link" href="${esc(href)}"${ext}${dl} data-move="${cardId}-${esc(move.name)}">${inner}</a></li>`
   }
   const live = move.value === "{countdown}" ? ` data-countdown` : ""
@@ -139,7 +143,7 @@ export function factsMarkup() {
     <dl>
       <div><dt>Who</dt><dd><p>${esc(party.kid)} is turning ${party.age}.</p></dd></div>
       <div><dt>When</dt><dd><p>${esc(party.dateLabel)}, 2026</p><p>${esc(party.timeLabel)}</p>
-        <p><a href="emmett-birthday.ics" download="emmett-birthday.ics">Add to calendar</a> or <a href="${esc(googleCalendarHref())}" target="_blank" rel="noopener">Google Calendar</a></p></dd></div>
+        <p><a href="emmett-birthday.ics"${icsDownloadAttr}>Add to calendar</a> or <a href="${esc(googleCalendarHref())}" target="_blank" rel="noopener">Google Calendar</a></p></dd></div>
       <div><dt>Where</dt><dd><p>${esc(party.venue)} – ${esc(party.venueArea)}</p><p>${esc(party.street)}<br />${esc(party.city)}</p>
         <p><a href="${esc(mapsHref())}" target="_blank" rel="noopener">Get directions</a> · <a href="${party.phoneHref}">${esc(party.phoneLabel)}</a></p></dd></div>
       <div><dt>RSVP</dt><dd>${rsvp}</dd></div>
