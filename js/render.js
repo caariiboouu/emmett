@@ -89,7 +89,7 @@ const icon = (name) =>
 function artMarkup(card) {
   if (card.art.img) {
     const focus = card.art.focus ? ` style="object-position: ${esc(card.art.focus)}"` : ""
-    return `<img src="${esc(card.art.img)}" alt="" decoding="async"${focus} />`
+    return `<img src="${esc(card.art.img)}" alt="" decoding="async" draggable="false"${focus} />`
   }
   const viewBox = card.art.full ? "0 0 300 420" : "0 0 300 200"
   return `<svg viewBox="${viewBox}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${art[card.art.svg] || ""}</svg>`

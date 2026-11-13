@@ -14,6 +14,8 @@
   --foam: #eaf6ff;
 
   --display: "Bungee", "Arial Black", system-ui, sans-serif;
+  --display-inline: "Bungee Inline", "Bungee", "Arial Black", system-ui, sans-serif;
+  --condensed: "Anton", "Impact", "Arial Narrow", system-ui, sans-serif;
   --body: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
 
   /* One card size for the whole page. It fits a phone with room for the controls. */

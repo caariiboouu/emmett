@@ -236,6 +236,9 @@ document.addEventListener("keydown", (event) => {
 // Drag the top card. A short press with no movement also moves on.
 let drag = null
 
+// No native drag of images or links: it would steal the pointer from the card drag.
+for (const el of [deckCards, lightboxCard]) el.addEventListener("dragstart", (event) => event.preventDefault())
+
 deckCards.addEventListener("pointerdown", (event) => {
   const slot = event.target.closest(".slot.is-top")
   if (!slot || stage.dataset.phase !== "deck") return

@@ -20,7 +20,7 @@
     <link rel="icon" href="art/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bungee&family=Bungee+Inline&family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="css/card.css" />
     <link rel="stylesheet" href="css/pack.css" />
@@ -80,25 +80,43 @@
             <div class="pack-sheen"></div>
             <div class="pack-band"></div>
             <div class="pack-print">
-              <p class="pack-kicker">Emmett's birthday</p>
-              <p class="pack-seven" aria-hidden="true">7</p>
-              <p class="pack-title">Splash Legends</p>
+              <p class="pack-banner"><span>Emmett</span></p>
+              <div class="pack-hero">
+                <p class="pack-turns">turns</p>
+                <p class="pack-seven">7</p>
+              </div>
+              <p class="pack-logo"><span class="pack-logo-top">Splash</span><span class="pack-logo-bottom">Legends</span></p>
               <p class="pack-count">7 party cards inside</p>
             </div>
             <div class="pack-sticker" aria-hidden="true">
               <svg viewBox="0 0 120 120">
-                <path d="M60 4l10 18 19-9 2 21 21 2-9 19 18 10-18 10 9 19-21 2-2 21-19-9-10 18-10-18-19 9-2-21-21-2 9-19L4 60l18-10-9-19 21-2 2-21 19 9z" fill="#c6ff1a" />
-                <path d="M60 4l10 18 19-9 2 21 21 2-9 19 18 10-18 10 9 19-21 2-2 21-19-9-10 18-10-18-19 9-2-21-21-2 9-19L4 60l18-10-9-19 21-2 2-21 19 9z" fill="url(#stickerFoil)" style="mix-blend-mode: color-dodge" />
                 <defs>
-                  <radialGradient id="stickerFoil" cx="35%" cy="30%" r="60%">
-                    <stop offset="0" stop-color="#fff8" />
-                    <stop offset=".4" stop-color="#ff7ab8" />
-                    <stop offset=".65" stop-color="#7dffa8" />
-                    <stop offset="1" stop-color="#0000" />
+                  <linearGradient id="stickerBurst" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#f2ff9a" />
+                    <stop offset=".45" stop-color="#c6ff1a" />
+                    <stop offset="1" stop-color="#7fd000" />
+                  </linearGradient>
+                  <radialGradient id="stickerFoil" cx="32%" cy="28%" r="70%">
+                    <stop offset="0" stop-color="#fff" stop-opacity=".9" />
+                    <stop offset=".35" stop-color="#ff7ab8" stop-opacity=".7" />
+                    <stop offset=".6" stop-color="#22e4ff" stop-opacity=".6" />
+                    <stop offset="1" stop-color="#000" stop-opacity="0" />
                   </radialGradient>
+                  <linearGradient id="stickerOne" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#ffffff" />
+                    <stop offset=".55" stop-color="#ffe27a" />
+                    <stop offset="1" stop-color="#ffb21a" />
+                  </linearGradient>
                 </defs>
-                <text x="60" y="54" text-anchor="middle">1 secret</text>
-                <text x="60" y="76" text-anchor="middle">rare!</text>
+                <path d="M60.0 3.0 L67.0 11.5 L76.1 5.3 L80.4 15.4 L90.8 12.0 L92.1 23.0 L103.1 22.7 L101.2 33.5 L111.8 36.3 L107.0 46.2 L116.4 51.9 L109.0 60.0 L116.4 68.1 L107.0 73.8 L111.8 83.7 L101.2 86.5 L103.1 97.3 L92.1 97.0 L90.8 108.0 L80.4 104.6 L76.1 114.7 L67.0 108.5 L60.0 117.0 L53.0 108.5 L43.9 114.7 L39.6 104.6 L29.2 108.0 L27.9 97.0 L16.9 97.3 L18.8 86.5 L8.2 83.7 L13.0 73.8 L3.6 68.1 L11.0 60.0 L3.6 51.9 L13.0 46.2 L8.2 36.3 L18.8 33.5 L16.9 22.7 L27.9 23.0 L29.2 12.0 L39.6 15.4 L43.9 5.3 L53.0 11.5Z" fill="url(#stickerBurst)" />
+                <path d="M60.0 3.0 L67.0 11.5 L76.1 5.3 L80.4 15.4 L90.8 12.0 L92.1 23.0 L103.1 22.7 L101.2 33.5 L111.8 36.3 L107.0 46.2 L116.4 51.9 L109.0 60.0 L116.4 68.1 L107.0 73.8 L111.8 83.7 L101.2 86.5 L103.1 97.3 L92.1 97.0 L90.8 108.0 L80.4 104.6 L76.1 114.7 L67.0 108.5 L60.0 117.0 L53.0 108.5 L43.9 114.7 L39.6 104.6 L29.2 108.0 L27.9 97.0 L16.9 97.3 L18.8 86.5 L8.2 83.7 L13.0 73.8 L3.6 68.1 L11.0 60.0 L3.6 51.9 L13.0 46.2 L8.2 36.3 L18.8 33.5 L16.9 22.7 L27.9 23.0 L29.2 12.0 L39.6 15.4 L43.9 5.3 L53.0 11.5Z" fill="url(#stickerFoil)" style="mix-blend-mode: color-dodge" />
+                <circle cx="60" cy="60" r="44" fill="#050b14" />
+                <circle cx="60" cy="60" r="44" fill="none" stroke="#000" stroke-width="2" />
+                <circle cx="60" cy="60" r="41" fill="none" stroke="#c6ff1a" stroke-width="1.2" opacity=".75" />
+                <text class="sticker-stars" x="60" y="30" text-anchor="middle">★ ★ ★</text>
+                <text class="sticker-one" x="60" y="62" text-anchor="middle">1</text>
+                <text class="sticker-word" x="60" y="77" text-anchor="middle">SECRET</text>
+                <text class="sticker-word" x="60" y="92" text-anchor="middle">RARE!</text>
               </svg>
             </div>
             <div class="pack-crimp pack-crimp-bottom"></div>

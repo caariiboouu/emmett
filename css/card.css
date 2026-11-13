@@ -198,6 +198,9 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  /* The art is not a drag target: a mouse drag must move the whole card, not the browser's image ghost. */
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
 /* A painted image has no see-through parts, so the foil goes on top, lighter. */
