@@ -140,6 +140,6 @@ export const cards = [
       { icon: "wave", name: "Cannonball", text: "Makes the biggest splash in the pool.", value: "70" },
       { icon: "star", name: "Seven candles", text: "Blows out all seven in one breath.", value: "7" },
     ],
-    flavor: "One of a kind. Just like him.",
+    flavor: "One of a kind.",
   },
 ]
