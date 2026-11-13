@@ -1,0 +1,479 @@
+/* Pool party world: deep-end blue, tile grid, light on the water.
+   Pool-noodle colors are the only accents. */
+
+:root {
+  color-scheme: dark;
+  --deep: #04264a;
+  --tile: #0b5fa5;
+  --chlorine: #6fe7f0;
+  --noodle-pink: #ff4f9a;
+  --noodle-yellow: #ffd23f;
+  --noodle-lime: #7ce85a;
+  --ink: #0b2340;
+  --foam: #ffffff;
+
+  --display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --body: "Baloo 2", ui-rounded, system-ui, sans-serif;
+
+  /* One card size for the whole page. It fits a phone with room for the controls. */
+  --card-w: min(84vw, 340px, calc((100svh - 190px) * 0.716));
+  --card-h: calc(var(--card-w) * 88 / 63);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--deep);
+  color: var(--foam);
+  font-family: var(--body);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.has-lightbox {
+  overflow: hidden;
+}
+
+.defs {
+  position: absolute;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--noodle-yellow);
+  outline-offset: 3px;
+}
+
+/* ---------- The pool behind everything ---------- */
+
+.pool {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% -10%, #1785c9 0%, transparent 60%),
+    linear-gradient(180deg, #0d6db5 0%, var(--deep) 75%);
+}
+
+/* Tiles, seen through the water at a slight angle. */
+.pool-tiles {
+  position: absolute;
+  inset: -20% -40% -10%;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.13) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.13) 2px, transparent 2px);
+  background-size: 44px 44px;
+  transform: perspective(700px) rotateX(48deg);
+  transform-origin: 50% 0;
+  mask-image: linear-gradient(180deg, transparent, #000 25%, #000 70%, transparent);
+}
+
+/* Light ripples: soft bright blobs that drift slowly. */
+.pool-light {
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(18% 9% at 30% 30%, rgb(160 245 255 / 0.22), transparent 70%),
+    radial-gradient(14% 8% at 70% 22%, rgb(160 245 255 / 0.18), transparent 70%),
+    radial-gradient(22% 10% at 55% 60%, rgb(160 245 255 / 0.14), transparent 70%),
+    radial-gradient(16% 7% at 20% 75%, rgb(160 245 255 / 0.14), transparent 70%);
+  filter: blur(6px);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+.pool-bubbles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, transparent 5px, rgb(255 255 255 / 0.35) 6px, transparent 7.5px),
+    radial-gradient(circle, transparent 3px, rgb(255 255 255 / 0.3) 4px, transparent 5px);
+  background-size: 230px 340px, 160px 260px;
+  background-position: 40px 0, 120px 60px;
+  animation: rise 22s linear infinite;
+  opacity: 0.55;
+}
+
+@keyframes drift {
+  to {
+    transform: translate(4%, 3%) scale(1.08);
+  }
+}
+
+@keyframes rise {
+  to {
+    background-position: 40px -680px, 120px -460px;
+  }
+}
+
+/* ---------- Stage: the pack, then the deck, then the binder ---------- */
+
+.stage {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  align-items: center;
+  padding: max(14px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+  perspective: 1200px;
+}
+
+.status {
+  grid-row: 1;
+  margin: 0;
+  min-height: 3em;
+  max-width: 26em;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #d6f6ff;
+  text-wrap: balance;
+}
+
+.pack,
+.deck {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.open-button,
+.deck-controls {
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.open-button {
+  border: 2px solid rgb(255 255 255 / 0.4);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.35rem 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.open-button:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.round-button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / 0.45);
+  background: rgb(4 38 74 / 0.5);
+  cursor: pointer;
+}
+
+.round-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.round-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.deck-count {
+  margin: 0;
+  min-width: 4.5em;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+}
+
+.tilt-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  background: var(--noodle-yellow);
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tilt-button[hidden] {
+  display: none;
+}
+
+/* Phase switches */
+
+.stage:not([data-phase="sealed"]) .open-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage[data-phase="deck"] .deck-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.stage[data-phase="binder"] {
+  display: block;
+  justify-items: normal;
+  padding-top: max(28px, env(safe-area-inset-top));
+}
+
+.stage[data-phase="binder"] :is(.pack, .deck, .deck-controls, .open-button) {
+  display: none;
+}
+
+.stage[data-phase="binder"] .status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* ---------- Binder ---------- */
+
+.binder {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  animation: binder-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.binder[hidden] {
+  display: none;
+}
+
+.binder-title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  line-height: 1;
+  color: var(--noodle-yellow);
+  text-shadow: 0 4px 0 var(--ink);
+  letter-spacing: 0.01em;
+}
+
+.binder-lead {
+  margin: 0.4rem 0 1.4rem;
+  text-align: center;
+  color: #d6f6ff;
+  font-weight: 600;
+}
+
+.binder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(190px, 42vw), 1fr));
+  gap: 14px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgb(2 22 46 / 0.45);
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.08);
+}
+
+.binder-slot {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: 6%;
+  perspective: 800px;
+}
+
+.binder-slot .card {
+  --card-w: 100%;
+  width: 100%;
+}
+
+/* The secret rare takes the first row on wide screens. */
+.binder-slot:last-child {
+  order: -1;
+}
+
+@keyframes binder-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* ---------- Plain facts ---------- */
+
+.facts {
+  margin: 2rem auto 0;
+  max-width: 34rem;
+  padding: 1.4rem 1.4rem 0.6rem;
+  border-radius: 22px;
+  background: var(--foam);
+  color: var(--ink);
+}
+
+.facts-title {
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.facts dl {
+  margin: 0;
+}
+
+.facts dl > div {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.6rem;
+  padding: 0.75rem 0;
+  border-top: 2px dashed #cfe9f3;
+}
+
+.facts dt {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  color: var(--tile);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.facts dd p {
+  margin: 0;
+}
+
+.facts dd p + p {
+  margin-top: 0.3rem;
+}
+
+.facts a {
+  color: #0a4f8f;
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.again-button {
+  display: block;
+  margin: 1.6rem auto 1rem;
+  border: 2px solid rgb(255 255 255 / 0.5);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.55rem 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: 16px;
+  background: rgb(2 18 38 / 0.82);
+  backdrop-filter: blur(6px);
+  perspective: 1200px;
+  animation: fade 0.25s ease;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-card .card {
+  animation: zoom-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lightbox-close {
+  border: 2px solid rgb(255 255 255 / 0.5);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* ---------- Confetti ---------- */
+
+.confetti {
+  position: fixed;
+  left: 50%;
+  top: 55%;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.confetti i {
+  position: absolute;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation: pop var(--d) cubic-bezier(0.15, 0.6, 0.3, 1) forwards;
+}
+
+@keyframes pop {
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--x), var(--y)) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pool-light,
+  .pool-bubbles,
+  .binder {
+    animation: none;
+  }
+}

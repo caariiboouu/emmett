@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sticker study</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(50% 40% at 50% 0%, #342818, transparent 70%),
+          #12100e;
+        color: #f6f1e6;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      main {
+        display: grid;
+        justify-items: center;
+        gap: 1.5rem;
+        padding: 2rem 1rem 3rem;
+      }
+      h1 {
+        margin: 0;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-weight: 500;
+      }
+      .lead {
+        margin: 0;
+        max-width: 36rem;
+        text-align: center;
+        color: #cfc4b4;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        align-items: center;
+        justify-content: center;
+      }
+      .diecut {
+        width: min(320px, 80vw);
+        padding: 1.4rem;
+        filter: url("#diecut");
+      }
+      .bug {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      .controls {
+        display: flex;
+        gap: 0.4rem;
+      }
+      button {
+        border: 1px solid rgb(255 255 255 / 0.22);
+        background: transparent;
+        color: inherit;
+        border-radius: 999px;
+        padding: 0.4rem 0.8rem;
+        font: inherit;
+        cursor: pointer;
+      }
+      button[aria-pressed="true"] {
+        background: #f6f1e6;
+        color: #1a140f;
+      }
+      .swatch {
+        width: min(280px, 80vw);
+        aspect-ratio: 1;
+        border-radius: 28px;
+        display: grid;
+        place-items: center;
+        background: conic-gradient(from 20deg, #ff4d88, #ffb15a, #fff06a, #63f0a0, #59d6ff, #8a7dff, #ff4d88);
+      }
+      .label {
+        background: #111;
+        color: #fff;
+        mix-blend-mode: multiply;
+        padding: 0.7rem 1rem 0.55rem;
+        border-radius: 8px;
+        font-weight: 750;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      figcaption {
+        margin-top: 0.7rem;
+        text-align: center;
+        color: #cfc4b4;
+        font-size: 0.92rem;
+      }
+      figure {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <filter id="diecut" x="-30%" y="-30%" width="160%" height="160%">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="dilate"></feMorphology>
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="4" result="noise"></feTurbulence>
+        <feDisplacementMap id="edge" in="dilate" in2="noise" scale="2.5" result="edge"></feDisplacementMap>
+        <feFlood flood-color="#f4efe6" result="paper"></feFlood>
+        <feComposite in="paper" in2="edge" operator="in" result="outline"></feComposite>
+        <feMerge result="merged">
+          <feMergeNode in="outline"></feMergeNode>
+          <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"></feGaussianBlur>
+        <feSpecularLighting in="blur" surfaceScale="5" specularConstant="0.9" specularExponent="28" lighting-color="#ffffff" result="spec">
+          <fePointLight id="light" x="120" y="80" z="140"></fePointLight>
+        </feSpecularLighting>
+        <feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"></feComposite>
+        <feComposite in="merged" in2="specIn" operator="arithmetic" k2="1" k3="0.75"></feComposite>
+        <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.45"></feDropShadow>
+      </filter>
+    </svg>
+    <main>
+      <h1>Die-cut sticker</h1>
+      <p class="lead">
+        Move over the moth. The white rim is a dilated alpha, the shine is a point light, and the wings carry a foil gradient.
+      </p>
+      <div class="row">
+        <figure>
+          <div class="diecut" id="sticker">
+            <svg class="bug" viewBox="0 0 200 210">
+              <defs>
+                <radialGradient id="foil" cx="35%" cy="30%" r="55%">
+                  <stop offset="0%" stop-color="#fff6"></stop>
+                  <stop offset="32%" stop-color="#ff7ab8"></stop>
+                  <stop offset="55%" stop-color="#7dffa8"></stop>
+                  <stop offset="78%" stop-color="#8eb6ff"></stop>
+                  <stop offset="100%" stop-color="#0000"></stop>
+                </radialGradient>
+              </defs>
+              <g id="wings">
+                <ellipse cx="72" cy="112" rx="62" ry="74" fill="#a56b45" transform="rotate(-16 72 112)" />
+                <ellipse cx="128" cy="112" rx="62" ry="74" fill="#a85a78" transform="rotate(16 128 112)" />
+              </g>
+              <g style="mix-blend-mode: color-dodge">
+                <ellipse cx="72" cy="112" rx="62" ry="74" fill="url(#foil)" transform="rotate(-16 72 112)" />
+                <ellipse cx="128" cy="112" rx="62" ry="74" fill="url(#foil)" transform="rotate(16 128 112)" />
+              </g>
+              <ellipse cx="72" cy="102" rx="18" ry="14" fill="#1a120c" />
+              <ellipse cx="128" cy="102" rx="18" ry="14" fill="#1a120c" />
+              <circle cx="76" cy="100" r="4" fill="#fff4" />
+              <circle cx="132" cy="100" r="4" fill="#fff4" />
+              <ellipse cx="100" cy="118" rx="16" ry="42" fill="#24180f" />
+              <path d="M90 78c-18-36-48-28-40 0" fill="none" stroke="#24180f" stroke-width="3" stroke-linecap="round" />
+              <path d="M110 78c18-36 48-28 40 0" fill="none" stroke="#24180f" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <figcaption>Outline, rough edge, specular light</figcaption>
+        </figure>
+        <figure>
+          <div class="swatch" aria-hidden="true">
+            <div class="label">Rare</div>
+          </div>
+          <figcaption>Black plate, white type, mix-blend-mode: multiply. The letters knock out to the foil.</figcaption>
+        </figure>
+      </div>
+      <div class="controls">
+        <button type="button" id="rough-toggle" aria-pressed="true">Rough edge</button>
+      </div>
+    </main>
+    <script src="pointer.js"></script>
+    <script>
+      const sticker = document.querySelector("#sticker")
+      const foil = document.querySelector("#foil")
+      const light = document.querySelector("#light")
+      const toggle = document.querySelector("#rough-toggle")
+      const edge = document.querySelector("#edge")
+      bindLight(sticker, light)
+      sticker.addEventListener("pointermove", (event) => {
+        const { px, py } = setPointer(sticker, event.clientX, event.clientY)
+        foil.setAttribute("cx", `${50 + px * 35}%`)
+        foil.setAttribute("cy", `${40 + py * 35}%`)
+      })
+      toggle.addEventListener("click", () => {
+        const on = toggle.getAttribute("aria-pressed") !== "true"
+        toggle.setAttribute("aria-pressed", String(on))
+        edge.setAttribute("scale", on ? "2.5" : "0")
+      })
+    </script>
+  </body>
+</html>

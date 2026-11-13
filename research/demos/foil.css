@@ -1,0 +1,295 @@
+/* Holographic card surface.
+
+   Layer order, bottom to top:
+   1. .holo-art          the printed face
+   2. .holo-foil         rainbow gradient + scanlines, color-dodge
+   3. .holo-bars         soft diagonal bands that slide with the pointer
+   4. .holo-refract      two oversized corner spectra, scaled by --px/--py
+   5. .holo-spot         soft spotlight, overlay
+   6. .holo-copy         type sits above the foil so the words stay readable
+   7. .holo::after       angled inset edge highlight
+
+   data-rarity:
+   common  spotlight only
+   rare    foil clipped to the art window
+   secret  foil across the whole card
+
+   --px / --py come from pointer.js bindSurface(). Positive --py is below center.
+   rotateX(positive) tips the top edge back, so the face turns toward the pointer.
+*/
+
+.holo {
+  --px: 0.15;
+  --py: -0.2;
+  position: relative;
+  width: min(280px, 78vw);
+  aspect-ratio: 63 / 88;
+  border-radius: 8% / 5.6%;
+  isolation: isolate;
+  background: #1a1424;
+  color: #f6f1e6;
+  box-shadow:
+    0 18px 40px rgb(0 0 0 / 0.35),
+    inset 0 0 0 1px rgb(255 255 255 / 0.14);
+  transform: rotateX(calc(var(--py) * 12deg)) rotateY(calc(var(--px) * -14deg));
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.holo:hover {
+  transition-duration: 0.06s;
+}
+
+.holo-art,
+.holo-fx,
+.holo-copy {
+  position: absolute;
+  inset: 0;
+}
+
+.holo-art {
+  background:
+    radial-gradient(60% 45% at 50% 46%, #4a3568, transparent 72%),
+    linear-gradient(180deg, #241833, #120e18);
+}
+
+.holo-art .creature {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 24%;
+  height: 40%;
+  overflow: visible;
+}
+
+.holo-fx {
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.holo-copy {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5.5% 6.5% 5%;
+  pointer-events: none;
+}
+
+.holo[data-rarity="common"] .holo-foil,
+.holo[data-rarity="common"] .holo-bars,
+.holo[data-rarity="common"] .holo-refract {
+  opacity: 0;
+}
+
+.holo[data-rarity="common"] .holo-spot {
+  opacity: 0.7;
+}
+
+.holo[data-rarity="rare"] .holo-fx {
+  clip-path: inset(22% 8% 34% 8% round 12px);
+}
+
+.holo[data-rarity="secret"] .holo-foil {
+  opacity: 0.78;
+}
+
+.holo-foil,
+.holo-bars,
+.holo-refract,
+.holo-spot {
+  position: absolute;
+}
+
+.holo-foil {
+  inset: -12%;
+  opacity: 0.62;
+  mix-blend-mode: color-dodge;
+  background-image:
+    repeating-linear-gradient(
+      calc(118deg + var(--py) * 16deg),
+      #ff4d88 0%,
+      #ffb15a 14%,
+      #fff06a 28%,
+      #63f0a0 44%,
+      #59d6ff 60%,
+      #8a7dff 76%,
+      #ff4d88 100%
+    ),
+    repeating-linear-gradient(90deg, #000 0 1px, #a3a3ad 1px 2px);
+  background-size: 280% 280%, auto;
+  background-position:
+    calc(42% + var(--px) * -36%) calc(46% + var(--py) * -42%),
+    center;
+  background-blend-mode: screen;
+  filter: saturate(1.4) contrast(1.12);
+}
+
+.holo-foil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(255 255 255 / 0.95) 0.45px, transparent 0.7px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  translate: calc(var(--px) * -5%) calc(var(--py) * -5%);
+}
+
+.holo-bars {
+  inset: -20%;
+  mix-blend-mode: soft-light;
+  opacity: 0.85;
+  background: repeating-linear-gradient(
+    calc(96deg + var(--px) * 14deg),
+    transparent 0 10%,
+    rgb(255 255 255 / 0.55) 10.4% 11.4%,
+    transparent 12% 22%
+  );
+  translate: calc(var(--px) * -12%) calc(var(--py) * 4%);
+}
+
+.holo-refract {
+  width: 230%;
+  aspect-ratio: 1;
+  mix-blend-mode: color-dodge;
+  filter: saturate(1.5);
+  opacity: 0.8;
+}
+
+.holo[data-rarity="rare"] .holo-refract {
+  opacity: 0.45;
+}
+
+.holo-refract-a {
+  left: -30%;
+  bottom: -40%;
+  transform-origin: 0 100%;
+  background: radial-gradient(
+    circle at 0 100%,
+    transparent 14%,
+    #ff9eb8,
+    #7dffa8,
+    #8eb6ff,
+    transparent 58%
+  );
+  scale: min(1, calc(0.42 + (var(--px) + 1) * 0.22));
+  translate: calc(var(--px) * 8%) calc(var(--py) * -6%);
+}
+
+.holo-refract-b {
+  right: -30%;
+  top: -40%;
+  transform-origin: 100% 0;
+  background: radial-gradient(
+    circle at 100% 0,
+    transparent 14%,
+    #ffd27a,
+    #7de7ff,
+    #d9a6ff,
+    transparent 58%
+  );
+  scale: min(1, calc(0.38 + (1 - var(--px)) * 0.24));
+  translate: calc(var(--px) * 6%) calc(var(--py) * 7%);
+}
+
+.holo-spot {
+  inset: -35%;
+  background: radial-gradient(
+    circle at calc(50% + var(--px) * 26%) calc(50% + var(--py) * 28%),
+    rgb(255 255 255 / 0.9) 0 2%,
+    rgb(255 255 255 / 0.16) 18%,
+    transparent 38%
+  );
+  mix-blend-mode: overlay;
+}
+
+.holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1.5px rgb(255 255 255 / 0.42),
+    inset 0 0 18px rgb(255 255 255 / 0.18);
+  mask-image: linear-gradient(
+    calc(128deg + var(--px) * 36deg),
+    #000 0 16%,
+    transparent 40% 64%,
+    #000 86% 100%
+  );
+}
+
+.holo-kicker,
+.holo-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 3.15cqi;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.holo-copy h2 {
+  margin: 0.12em 0 0;
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+  font-weight: 600;
+  font-size: 8cqi;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.holo-fact {
+  margin: 0;
+  align-self: flex-start;
+  padding: 0.4em 0.7em;
+  border-radius: 999px;
+  background: rgb(8 6 12 / 0.62);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 3.5cqi;
+  letter-spacing: 0.03em;
+}
+
+.art-night {
+  background:
+    radial-gradient(40% 30% at 70% 22%, rgb(255 214 140 / 0.45), transparent 70%),
+    radial-gradient(50% 40% at 40% 48%, #6a4c86, transparent 70%),
+    linear-gradient(180deg, #2a1c40, #120c1a);
+}
+
+.art-moss {
+  background:
+    radial-gradient(45% 35% at 50% 62%, #86a56e, transparent 70%),
+    linear-gradient(180deg, #243024, #10160f);
+}
+
+.art-tide {
+  background:
+    radial-gradient(40% 30% at 30% 30%, #7fd0c8, transparent 60%),
+    linear-gradient(180deg, #16343c, #0c1418);
+}
+
+.art-dusk {
+  background:
+    radial-gradient(40% 28% at 60% 24%, #ffb089, transparent 65%),
+    linear-gradient(180deg, #3a221c, #140c10);
+}
+
+.art-ink {
+  background:
+    radial-gradient(50% 40% at 50% 42%, #5c4d86, transparent 68%),
+    linear-gradient(165deg, #2a2140, #100c18 60%, #1b1430);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo {
+    transition: none;
+  }
+}

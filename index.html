@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Emmett turns 7 · Splash party</title>
+    <meta name="description" content="You're invited to Emmett's 7th birthday swim party. Saturday, December 5, 2:00 to 4:00 PM at Goldfish Swim School, Tulsa Hills." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#04264a" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Emmett turns 7! Open your party pack" />
+    <meta property="og:description" content="A birthday swim party. Saturday, December 5, 2–4 PM. Tear open the pack to see your cards." />
+    <meta property="og:url" content="https://caariiboouu.github.io/emmett/" />
+    <meta property="og:image" content="https://caariiboouu.github.io/emmett/art/share.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="art/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Lilita+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/card.css" />
+    <link rel="stylesheet" href="css/pack.css" />
+  </head>
+  <body>
+    <!-- SVG filters: decorative only. If a browser drops them, only texture is lost. -->
+    <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <filter id="crinkle" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.06" numOctaves="3" seed="7" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+      </filter>
+      <filter id="diecut" x="-30%" y="-30%" width="160%" height="160%">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="dilate" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="4" result="noise" />
+        <feDisplacementMap in="dilate" in2="noise" scale="2" result="edge" />
+        <feFlood flood-color="#ffffff" result="paper" />
+        <feComposite in="paper" in2="edge" operator="in" result="outline" />
+        <feMerge>
+          <feMergeNode in="outline" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+        <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#021428" flood-opacity="0.45" />
+      </filter>
+    </svg>
+
+    <div class="pool" aria-hidden="true">
+      <div class="pool-tiles"></div>
+      <div class="pool-light"></div>
+      <div class="pool-bubbles"></div>
+    </div>
+
+    <main class="stage" id="stage" data-phase="sealed">
+      <p class="status" id="status" aria-live="polite">Swipe across the top of the pack to tear it open.</p>
+
+      <!-- The sealed pack -->
+      <div class="pack" id="pack">
+        <div class="pack-inner">
+          <div class="pack-body">
+            <div class="pack-foil"></div>
+            <div class="pack-print">
+              <p class="pack-kicker">Emmett's birthday</p>
+              <p class="pack-seven" aria-hidden="true">7</p>
+              <p class="pack-title">Splash Series</p>
+              <p class="pack-count">7 party cards inside</p>
+            </div>
+            <div class="pack-sticker" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <path d="M60 4l10 18 19-9 2 21 21 2-9 19 18 10-18 10 9 19-21 2-2 21-19-9-10 18-10-18-19 9-2-21-21-2 9-19L4 60l18-10-9-19 21-2 2-21 19 9z" fill="#ffd23f" />
+                <path d="M60 4l10 18 19-9 2 21 21 2-9 19 18 10-18 10 9 19-21 2-2 21-19-9-10 18-10-18-19 9-2-21-21-2 9-19L4 60l18-10-9-19 21-2 2-21 19 9z" fill="url(#stickerFoil)" style="mix-blend-mode: color-dodge" />
+                <defs>
+                  <radialGradient id="stickerFoil" cx="35%" cy="30%" r="60%">
+                    <stop offset="0" stop-color="#fff8" />
+                    <stop offset=".4" stop-color="#ff7ab8" />
+                    <stop offset=".65" stop-color="#7dffa8" />
+                    <stop offset="1" stop-color="#0000" />
+                  </radialGradient>
+                </defs>
+                <text x="60" y="54" text-anchor="middle">1 secret</text>
+                <text x="60" y="76" text-anchor="middle">rare!</text>
+              </svg>
+            </div>
+            <div class="pack-crimp pack-crimp-bottom"></div>
+          </div>
+
+          <!-- The strip that tears off -->
+          <div class="pack-strip" id="strip">
+            <div class="pack-foil"></div>
+            <div class="pack-crimp pack-crimp-top"></div>
+          </div>
+          <div class="tear-line" aria-hidden="true">
+            <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path class="tear-dash" d="M0 5 H100" />
+            </svg>
+            <div class="tear-rip-wrap">
+              <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path class="tear-rip" d="M0 5 L4 2 L8 7 L12 3 L16 8 L20 2 L24 6 L28 3 L32 8 L36 2 L40 7 L44 3 L48 8 L52 2 L56 6 L60 3 L64 8 L68 2 L72 7 L76 3 L80 8 L84 2 L88 6 L92 3 L96 8 L100 4" />
+              </svg>
+            </div>
+          </div>
+          <div class="tear-hint" aria-hidden="true">
+            <span class="tear-finger"></span>
+          </div>
+        </div>
+      </div>
+      <button class="open-button" id="openButton" type="button">Open the pack</button>
+
+      <!-- The cards come out of the pack into this stack -->
+      <section class="deck" id="deck" aria-label="Your party cards" aria-roledescription="card stack">
+        <div class="deck-cards" id="deckCards"></div>
+      </section>
+      <div class="deck-controls" id="deckControls">
+        <button class="round-button" id="prevButton" type="button" aria-label="Previous card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+        <p class="deck-count" id="deckCount">1 of 7</p>
+        <button class="round-button" id="nextButton" type="button" aria-label="Next card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+        <button class="tilt-button" id="tiltButton" type="button" hidden>Tilt to shine</button>
+      </div>
+
+      <!-- After the last card: the whole set, and the plain facts -->
+      <section class="binder" id="binder" aria-labelledby="binderTitle" hidden>
+        <h1 class="binder-title" id="binderTitle">You collected all 7!</h1>
+        <p class="binder-lead">Tap a card to look closer.</p>
+        <div class="binder-grid" id="binderGrid"></div>
+        <div class="facts" id="facts"></div>
+        <button class="again-button" id="againButton" type="button">Open the pack again</button>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <div class="lightbox-card" id="lightboxCard"></div>
+      <button class="lightbox-close" id="lightboxClose" type="button">Close</button>
+    </div>
+
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

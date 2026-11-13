@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Emmett Party//Invite//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:emmett-7th-birthday-2026-12-05@caariiboouu.github.io
+DTSTAMP:20261112T000000Z
+DTSTART:20261205T200000Z
+DTEND:20261205T220000Z
+SUMMARY:Emmett's 7th birthday swim party
+LOCATION:Goldfish Swim School - Tulsa Hills\, 7514 South Olympia Avenue\, Tulsa\, OK 74132
+DESCRIPTION:Bring a swimsuit and a towel. Pool phone: 539.233.6295
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Emmett's party is tomorrow
+END:VALARM
+END:VEVENT
+END:VCALENDAR

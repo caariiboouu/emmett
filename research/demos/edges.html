@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edges and glow</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(50% 40% at 50% 0%, #242038, transparent 70%),
+          #100e14;
+        color: #f6f1e6;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      h1 {
+        margin: 0 0 0.4rem;
+        text-align: center;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-weight: 500;
+      }
+      .lead {
+        margin: 0 auto 2rem;
+        max-width: 38rem;
+        text-align: center;
+        color: #c9c0b4;
+      }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        margin-top: 0.7rem;
+        max-width: 220px;
+        color: #c9c0b4;
+        font-size: 0.92rem;
+      }
+      .plate,
+      .prox,
+      .glow-card {
+        width: 220px;
+        height: 280px;
+        border-radius: 28px;
+        background: linear-gradient(165deg, #2a2438, #14111a);
+        position: relative;
+        corner-shape: squircle;
+      }
+      .plate {
+        display: grid;
+        place-items: center;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.7rem;
+      }
+      .plate::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        box-shadow:
+          inset 0 0 0 1.5px #fff,
+          inset 0 0 22px rgb(255 255 255 / 0.45);
+        mask-image: linear-gradient(
+          calc(var(--angle, 140) * 1deg),
+          #000 0 20%,
+          transparent 46% 68%,
+          #000 90%
+        );
+      }
+      .prox-glow {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px;
+        background: conic-gradient(
+          from calc((var(--angle, 0) - 28) * 1deg),
+          transparent 0 55%,
+          #fff 78%,
+          #d7b4ff 88%,
+          transparent 100%
+        );
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        filter: blur(calc(var(--near, 0) * 8px));
+        opacity: calc(0.7 + var(--near, 0) * 0.3);
+        pointer-events: none;
+      }
+      .prox-face,
+      .glow-card {
+        display: grid;
+        align-content: end;
+        justify-items: center;
+        padding-bottom: 1.4rem;
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+        font-size: 1.7rem;
+      }
+      .prox-face {
+        position: absolute;
+        inset: 0;
+      }
+      .glow-copy,
+      .glow-icon {
+        font-size: 5.5rem;
+        line-height: 1;
+        color: #9ad7ff;
+      }
+      .glow-copy {
+        position: absolute;
+        top: 22%;
+        filter: blur(28px) saturate(5) brightness(1.35);
+        scale: 1.65;
+        opacity: 0.95;
+      }
+      .glow-icon {
+        position: absolute;
+        top: 24%;
+      }
+      .glow-card p {
+        margin: 0;
+        font-size: 1.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Edges and glow</h1>
+      <p class="lead">Three small treatments for a card that is already in the hand. Move across each one.</p>
+      <div class="grid">
+        <figure>
+          <div class="plate" id="shine">Saturday</div>
+          <figcaption>Inset shadow, masked by an angled gradient. The angle follows the pointer. Squircle corners where the browser has them.</figcaption>
+        </figure>
+        <figure>
+          <div class="prox" id="prox">
+            <div class="prox-glow"></div>
+            <div class="prox-face">The yard</div>
+          </div>
+          <figcaption>A conic ring, masked to the border, blurred as the pointer gets close.</figcaption>
+        </figure>
+        <figure>
+          <div class="glow-card" id="glow">
+            <div class="glow-copy" aria-hidden="true">✦</div>
+            <div class="glow-icon">✦</div>
+            <p>Sweater</p>
+          </div>
+          <figcaption>A scaled copy of the mark, blurred and saturated, translated with the pointer.</figcaption>
+        </figure>
+      </div>
+    </main>
+    <script src="pointer.js"></script>
+    <script>
+      bindAngle(document.querySelector("#shine"))
+      bindAngle(document.querySelector("#prox"))
+      const glow = document.querySelector("#glow")
+      const copy = glow.querySelector(".glow-copy")
+      glow.addEventListener("pointermove", (event) => {
+        const box = glow.getBoundingClientRect()
+        const dx = event.clientX - (box.left + box.width / 2)
+        const dy = event.clientY - (box.top + box.height / 2)
+        copy.style.translate = `${dx * 0.35}px ${dy * 0.35}px`
+      })
+      glow.addEventListener("pointerleave", () => {
+        copy.style.translate = "0 0"
+      })
+    </script>
+  </body>
+</html>
