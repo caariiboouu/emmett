@@ -64,11 +64,7 @@ pack.addEventListener("pointermove", (event) => {
   if (stage.dataset.phase !== "sealed") return
   if (!tear || tear.id !== event.pointerId) {
     // Hover with a mouse: the sealed pack tilts toward the pointer.
-    if (event.pointerType === "mouse") {
-      const box = pack.getBoundingClientRect()
-      pack.style.setProperty("--px", (((event.clientX - box.left) / box.width) * 2 - 1).toFixed(3))
-      pack.style.setProperty("--py", (((event.clientY - box.top) / box.height) * 2 - 1).toFixed(3))
-    }
+    if (event.pointerType === "mouse") pointFromEvent(pack, event)
     return
   }
   const dx = event.clientX - tear.x0
@@ -94,12 +90,28 @@ function endTear(event) {
 
 pack.addEventListener("pointerup", endTear)
 pack.addEventListener("pointercancel", endTear)
-pack.addEventListener("pointerleave", (event) => {
-  if (event.pointerType === "mouse" && !tear) {
-    pack.style.setProperty("--px", "0")
-    pack.style.setProperty("--py", "0")
+// The sealed pack is the live surface: it sways slowly, or follows the mouse.
+setLive(pack)
+
+// The bevel light on the 7 and the title follows the same --px / --py.
+const packLights = [
+  [document.querySelector("#bevel .pack-light"), document.querySelector(".pack-seven")],
+  [document.querySelector("#bevel-sm .pack-light"), document.querySelector(".pack-title")],
+]
+
+function movePackLights() {
+  if (stage.dataset.phase === "sealed") {
+    const px = parseFloat(pack.style.getPropertyValue("--px")) || 0
+    const py = parseFloat(pack.style.getPropertyValue("--py")) || 0
+    for (const [light, el] of packLights) {
+      if (!light || !el) continue
+      light.setAttribute("x", (el.offsetWidth * (0.5 + px * 0.9)).toFixed(0))
+      light.setAttribute("y", (el.offsetHeight * (-0.35 + py * 0.6)).toFixed(0))
+    }
   }
-})
+  requestAnimationFrame(movePackLights)
+}
+requestAnimationFrame(movePackLights)
 
 async function nudge() {
   statusEl.textContent = "Put your finger on the pack and swipe across the top."
@@ -320,6 +332,7 @@ $("#againButton").addEventListener("click", () => {
   index = 0
   layout()
   stage.dataset.phase = "sealed"
+  setLive(pack)
   statusEl.textContent = "Swipe across the top of the pack to tear it open."
   window.scrollTo({ top: 0 })
 })
