@@ -45,10 +45,10 @@ export function countdownText(now = new Date()) {
 
 export function rsvpReady() {
   const r = party.rsvp
-  return Boolean(r.name && r.phone && r.by)
+  return Boolean(r.name && (r.phone || r.email))
 }
 
-export function rsvpHref() {
+export function rsvpSms() {
   const r = party.rsvp
   if (!r.phone) return ""
   const body = encodeURIComponent(r.message || `RSVP for ${party.kid}'s party: `)
@@ -56,14 +56,31 @@ export function rsvpHref() {
   return `sms:${r.phone}${isIOS ? "&" : "?"}body=${body}`
 }
 
+export function rsvpMail() {
+  const r = party.rsvp
+  if (!r.email) return ""
+  const subject = encodeURIComponent(`RSVP: ${party.kid}'s 7th birthday party`)
+  const body = encodeURIComponent(r.message || "")
+  return `mailto:${r.email}?subject=${subject}&body=${body}`
+}
+
+function rsvpSentence() {
+  const r = party.rsvp
+  const how = [r.phone && "text", r.email && "email"].filter(Boolean).join(" or ")
+  const verb = how.charAt(0).toUpperCase() + how.slice(1)
+  return `${verb} ${r.name}${r.by ? ` by ${r.by}` : ""}.`
+}
+
 function fill(text) {
   const r = party.rsvp
   return String(text)
     .replace("{countdown}", countdownText())
     .replace("{maps}", mapsHref())
-    .replace("{rsvpBig}", rsvpReady() ? `Text ${r.name} by ${r.by}` : "Tell us you're coming")
-    .replace("{rsvpLine}", rsvpReady() ? "Let us know how many swimmers to expect." : "RSVP details coming soon.")
-    .replace("{rsvpHref}", rsvpHref())
+    .replace("{rsvpBig}", "Tell us you're coming")
+    .replace("{rsvpLine}", rsvpReady() ? rsvpSentence() : "RSVP details coming soon.")
+    .replace("{rsvpSms}", rsvpSms())
+    .replace("{rsvpMail}", rsvpMail())
+    .replace("{rsvpPhone}", r.phoneLabel || "Text")
 }
 
 const icon = (name) =>
@@ -136,7 +153,12 @@ export function cardMarkup(card, index) {
 export function factsMarkup() {
   const r = party.rsvp
   const rsvp = rsvpReady()
-    ? `<p>Text ${esc(r.name)} by ${esc(r.by)}.</p><p><a href="${esc(rsvpHref())}">Send your RSVP</a></p>`
+    ? `<p>${esc(rsvpSentence())}</p><p>${[
+        r.phone && `<a href="${esc(rsvpSms())}">Text ${esc(r.phoneLabel || r.phone)}</a>`,
+        r.email && `<a href="${esc(rsvpMail())}">${esc(r.email)}</a>`,
+      ]
+        .filter(Boolean)
+        .join(" · ")}</p>`
     : `<p>RSVP details coming soon.</p>`
   return `
     <h2 class="facts-title">The party, in plain words</h2>

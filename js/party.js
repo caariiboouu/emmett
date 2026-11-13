@@ -18,13 +18,14 @@ export const party = {
   phoneLabel: "539.233.6295",
   phoneHref: "tel:+15392336295",
 
-  // TODO(Joel): who gets the RSVP, how, and by when.
-  // Leave a field empty ("") and the card says "RSVP details coming soon".
+  // RSVP goes to Alena by text or email. "by" is the reply-by date: leave it "" for no date.
   rsvp: {
-    name: "", //       e.g. "Joel"
-    phone: "", //      e.g. "+19185550123" (digits only, with +1)
-    by: "", //         e.g. "Saturday, November 28"
-    message: "", //    the text that opens in Messages, e.g. "Emmett's party: we're coming! Kids: 1"
+    name: "Alena",
+    phone: "+14158906365",
+    phoneLabel: "415.890.6365",
+    email: "alenachubenko@gmail.com",
+    by: "",
+    message: "RSVP for Emmett's party: ",
   },
 }
 
@@ -117,7 +118,10 @@ export const cards = [
     art: { svg: "pelican" },
     big: "{rsvpBig}",
     lines: ["{rsvpLine}"],
-    moves: [{ icon: "mail", name: "Send your RSVP", href: "{rsvpHref}", value: "Text" }],
+    moves: [
+      { icon: "phone", name: "Text Alena", href: "{rsvpSms}", value: "{rsvpPhone}" },
+      { icon: "mail", name: "Email Alena", href: "{rsvpMail}", value: "Email" },
+    ],
     flavor: "Carries every reply in its beak. Drops none.",
   },
   {
